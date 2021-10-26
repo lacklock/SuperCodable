@@ -26,10 +26,4 @@ Pod::Spec.new do |s|
     sp.dependency 'RxSwift', '~> 4.0'
   end
 
-  s.subspec 'RealmCache' do |sp|
-    sp.source_files = 'SuperCodable/Realm/*.swift'
-    sp.dependency 'RealmSwift'
-    sp.dependency 'SuperCodable/Codable'
-  end
-
 end
