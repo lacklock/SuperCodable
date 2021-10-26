@@ -17,6 +17,12 @@ extension Encodable {
         return dictionary ?? [:]
     }
     
+    public func toJSONArray() throws -> [Any] {
+        let data = try self.encoded()
+        let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [ Any]
+        return dictionary ?? []
+    }
+    
     /// Returns the JSON Dictionary for the object. if error happend return nil
     public func toJSONSafely() -> [String: Any]? {
         return try? self.toJSON()
@@ -33,8 +39,14 @@ extension Encodable {
     
     public func toJSONString(prettyPrint: Bool = false) throws -> String? {
         let options: JSONSerialization.WritingOptions = prettyPrint ? .prettyPrinted : []
-        let json = try toJSON()
-        let jsonData = try JSONSerialization.data(withJSONObject: json, options: options)
+        var jsonObject: Any
+        let jsonDict = try toJSON()
+        if jsonDict.count > 0 {
+            jsonObject = jsonDict
+        } else {
+            jsonObject = try toJSONArray()
+        }
+        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: options)
         return String(data: jsonData, encoding: String.Encoding.utf8)
     }
 }
