@@ -49,6 +49,13 @@ extension Encodable {
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: options)
         return String(data: jsonData, encoding: String.Encoding.utf8)
     }
+    
+    public func toJSONData(prettify: Bool = false) -> Data? {
+        guard let jsonObject = try? toJSON() else { return nil }
+        let options = (prettify == true) ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization
+            .WritingOptions()
+        return try? JSONSerialization.data(withJSONObject: jsonObject, options: options)
+    }
 }
 
 extension Decodable {
